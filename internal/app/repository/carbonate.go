@@ -1,0 +1,78 @@
+package repository
+
+import (
+	"time"
+	"web_service/internal/app/ds"
+
+	"gorm.io/gorm"
+)
+
+func (r *Repository) GetDraftCarbonateID(creatorID uint) uint {
+	var carbonateID uint
+	err := r.db.Model(&ds.Carbonate{}).Where("creator_id = ? AND status = ?", creatorID, "черновик").Select("id").First(&carbonateID).Error
+	if err != nil {
+		return 0
+	}
+	return carbonateID
+}
+
+func (r *Repository) GetDraftCarbonate(creatorID uint) (uint, error) {
+	carbonateID := r.GetDraftCarbonateID(creatorID)
+	if carbonateID == 0 {
+		carbonate := ds.Carbonate{
+			Status:     "черновик",
+			DateCreate: time.Now(),
+			CreatorID:  creatorID,
+		}
+		err := r.db.Create(&carbonate).Error
+		if err != nil {
+			return 0, err
+		}
+		carbonateID = carbonate.ID
+	}
+	return carbonateID, nil
+}
+
+func (r *Repository) GetCarbonatesWithFilter(status string, dateFrom, dateTo time.Time) ([]ds.Carbonate, error) {
+	var carbonates []ds.Carbonate
+
+	query := r.db.Model(&ds.Carbonate{}).Preload("Creator").Preload("Moderator")
+
+	if status != "" {
+		query = query.Where("status = ?", status)
+	}
+
+	if !dateFrom.IsZero() {
+		query = query.Where("date_create >= ?", dateFrom)
+	}
+
+	if !dateTo.IsZero() {
+		query = query.Where("date_create <= ?", dateTo)
+	}
+
+	if err := query.Order("date_create DESC").Find(&carbonates).Error; err != nil {
+		return nil, err
+	}
+
+	return carbonates, nil
+}
+
+func (r *Repository) GetCarbonateByID(id uint) (*ds.Carbonate, error) {
+	var carbonate ds.Carbonate
+	err := r.db.Preload("Creator").Preload("Moderator").Where("id = ?", id).First(&carbonate).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &carbonate, nil
+}
+
+func (r *Repository) UpdateCarbonate(id uint, updates map[string]interface{}) error {
+	return r.db.Model(&ds.Carbonate{}).Where("id = ?", id).Updates(updates).Error
+}
+
+func (r *Repository) DeleteCarbonate(id uint) error {
+	return r.db.Model(&ds.Carbonate{}).Where("id = ?", id).Update("status", "удален").Error
+}
