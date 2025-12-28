@@ -1,0 +1,1040 @@
+basePath: /
+definitions:
+  dto.AcidCreateRequest:
+    properties:
+      hplus:
+        minimum: 1
+        type: integer
+      info:
+        maxLength: 500
+        type: string
+      molar_mass:
+        minimum: 0
+        type: number
+      name:
+        maxLength: 15
+        type: string
+      name_ext:
+        maxLength: 25
+        type: string
+    required:
+    - hplus
+    - molar_mass
+    - name
+    - name_ext
+    type: object
+  dto.AcidListResponse:
+    properties:
+      acids:
+        items:
+          $ref: '#/definitions/dto.AcidResponse'
+        type: array
+    type: object
+  dto.AcidResponse:
+    properties:
+      hplus:
+        type: integer
+      id:
+        type: integer
+      img:
+        type: string
+      info:
+        type: string
+      molar_mass:
+        type: number
+      name:
+        type: string
+      name_ext:
+        type: string
+    type: object
+  dto.AcidUpdateRequest:
+    properties:
+      hplus:
+        minimum: 1
+        type: integer
+      info:
+        maxLength: 500
+        type: string
+      molar_mass:
+        minimum: 0
+        type: number
+      name:
+        maxLength: 15
+        type: string
+      name_ext:
+        maxLength: 25
+        type: string
+    type: object
+  dto.CarbonateAcidResponse:
+    properties:
+      acid:
+        $ref: '#/definitions/dto.AcidResponse'
+      acid_id:
+        type: integer
+      carbonate_id:
+        type: integer
+      id:
+        type: integer
+      mass:
+        type: number
+      result:
+        type: number
+    type: object
+  dto.CarbonateDetailResponse:
+    properties:
+      acids:
+        items:
+          $ref: '#/definitions/dto.CarbonateAcidResponse'
+        type: array
+      creator:
+        type: string
+      date_create:
+        type: string
+      date_finish:
+        type: string
+      date_update:
+        type: string
+      id:
+        type: integer
+      mass:
+        type: number
+      moderator:
+        type: string
+      status:
+        type: string
+    type: object
+  dto.CarbonateIconsResponse:
+    properties:
+      acid_count:
+        type: integer
+      carbonate_id:
+        type: integer
+    type: object
+  dto.CarbonateListResponse:
+    properties:
+      carbonates:
+        items:
+          $ref: '#/definitions/dto.CarbonateResponse'
+        type: array
+    type: object
+  dto.CarbonateResponse:
+    properties:
+      creator:
+        type: string
+      date_create:
+        type: string
+      date_finish:
+        type: string
+      date_update:
+        type: string
+      id:
+        type: integer
+      mass:
+        type: number
+      moderator:
+        type: string
+      status:
+        type: string
+    type: object
+  dto.CarbonateUpdateRequest:
+    properties:
+      mass:
+        minimum: 0
+        type: number
+    type: object
+  dto.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: number
+      token_type:
+        type: string
+    type: object
+  dto.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.UserLoginRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  dto.UserRegisterRequest:
+    properties:
+      login:
+        maxLength: 25
+        minLength: 3
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  dto.UserResponse:
+    properties:
+      id:
+        type: string
+      login:
+        type: string
+      role:
+        $ref: '#/definitions/role.Role'
+    type: object
+  dto.UserUpdateRequest:
+    properties:
+      login:
+        maxLength: 25
+        minLength: 3
+        type: string
+      password:
+        maxLength: 100
+        minLength: 6
+        type: string
+    type: object
+  role.Role:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      Admin: "2"
+      Guest: "0"
+      User: "1"
+    x-enum-descriptions:
+    - "0"
+    - "1"
+    - "2"
+    x-enum-varnames:
+    - Guest
+    - User
+    - Admin
+host: localhost:8080
+info:
+  contact:
+    email: kovalyovea@student.bmstu.ru
+    name: API Support
+    url: https://github.com/nylox23/DIA
+  description: Calculates the volume of gas emitted in a reaction
+  license:
+    name: AS IS (NO WARRANTY)
+  title: Carb_Calc
+  version: "1.0"
+paths:
+  /api/acids:
+    get:
+      description: Возвращает список кислот, отфильтрованный по названию
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AcidListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить список кислот
+      tags:
+      - acids
+    post:
+      consumes:
+      - application/json
+      description: Создает новую кислоту без изображения
+      security:
+        - Bearer: []
+      parameters:
+      - description: Данные создавемой кислоты
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AcidCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AcidResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать кислоту
+      tags:
+      - acids
+  /api/acids/{id}:
+    delete:
+      description: Проводит "удаление" кислоты, устанавливая флаг is_delete в true
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID кислоты
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Удалить кислоту
+      tags:
+      - acids
+    get:
+      description: Возвращает данные кислоты по ID
+      parameters:
+      - description: ID кислоты
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AcidResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить кислоту по ID
+      tags:
+      - acids
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные существующей кислоты
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID кислоты
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновляемые данные кислоты
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AcidUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AcidResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить кислоту
+      tags:
+      - acids
+  /api/acids/{id}/image:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Загружает изображение для кислоты, замещая предыдущее, если есть
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID кислоты
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Файл с изображением
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Добавить изображение кислоты
+      tags:
+      - acids
+  /api/acids/{id}/toCarbonate:
+    post:
+      description: Добавляет кислоту в текущую заявку-черновик пользователя
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID кислоты
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Добавить кислоту в заявку
+      tags:
+      - acids
+  /api/carbonate-acids/{id}:
+    delete:
+      description: Удаляет кислоту из текущей заявки-черновика пользователя
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID кислоты
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Удалить кислоту из заявки
+      tags:
+      - carbonate-acids
+    put:
+      consumes:
+      - application/json
+      description: Обновляет массу кислоты в текущей заявке-черновике пользователя
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID кислоты
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Масса кислоты
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить количество кислоты
+      tags:
+      - carbonate-acids
+  /api/carbonates:
+    get:
+      description: Возвращает список заявок, отфильтрованный по статусу и дате
+      security:
+        - Bearer: []
+      parameters:
+      - description: Фильтр по статусу
+        in: query
+        name: status
+        type: string
+      - description: Фильтр даты от
+        in: query
+        name: date_from
+        type: string
+      - description: Фильтр даты до
+        in: query
+        name: date_to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CarbonateListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить список заявок
+      tags:
+      - carbonates
+    put:
+      consumes:
+      - application/json
+      description: Обновляет поле "масса карбоната" в текущей заявке-черновика пользователя
+      security:
+        - Bearer: []
+      parameters:
+      - description: Обновляемые данные заявки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CarbonateUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить заявку
+      tags:
+      - carbonates
+  /api/carbonates/{id}:
+    delete:
+      description: Удаляет заявку (создателем - только черновики или отклоненные заявки)
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Удалить заявку
+      tags:
+      - carbonates
+    get:
+      description: Возвращает заявку со списком добавленных в нее кислот
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CarbonateDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить заявку по ID
+      tags:
+      - carbonates
+  /api/carbonates/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Устанавливает статус заявки на "завершен" или "отклонен"
+      security:
+        - Bearer: []
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Новый статус
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Установить статус заявки
+      tags:
+      - carbonates
+  /api/carbonates/current:
+    get:
+      description: Возвращает данные по текущей заявке-черновику пользователя для
+        кнопки перехода
+      security:
+        - Bearer: []
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CarbonateIconsResponse'
+      summary: Получить данные текущей заявки
+      tags:
+      - carbonates
+  /api/carbonates/form:
+    put:
+      description: Меняет статус текущей заявки-черновика пользователя на "сформирован"
+      security:
+        - Bearer: []
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Сформировать заявку
+      tags:
+      - carbonates
+  /api/users/login:
+    post:
+      consumes:
+      - application/json
+      description: Аутентифицирует пользователя с помощью логина и пароля, возвращает
+        JWT токен
+      parameters:
+      - description: Данные для входа в систему
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Aутентификация пользователя
+      tags:
+      - users
+  /api/users/logout:
+    post:
+      consumes:
+      - application/json
+      description: Добавляет JWT токен в блеклист, деактивируя его
+      security:
+        - Bearer: []
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Разлогинить пользователя
+      tags:
+      - users
+  /api/users/profile:
+    get:
+      description: Возвращает информацию из профиля пользователя
+      security:
+        - Bearer: []
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить данные пользователя
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Обновляет информацию в профиле пользователя (логин и/или пароль)
+      security:
+        - Bearer: []
+      parameters:
+      - description: Данные для обновления пользователя
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить данные пользователя
+      tags:
+      - users
+  /api/users/register:
+    post:
+      consumes:
+      - application/json
+      description: Создает нового пользователя с предоставленными логином и паролем
+      parameters:
+      - description: Данные для регистрации пользователя
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Зарегистрировать пользователя
+      tags:
+      - users
+schemes:
+- http
+swagger: "2.0"
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
