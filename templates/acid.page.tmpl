@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кислота - {{ .Name }}</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body>
+<header>
+    <button type="button" class="button home" onclick="location.href='/acids'">⌂  Домой</button>
+</header>
+<div class="card detail-card">
+    <h2>{{ .Name }} - {{ .NameExt }}</h2>
+    <img src="{{ .Img }}" alt="{{ .Name }}">
+    <p>{{ .Info }}</p>
+    <div class="h-plus">Количество ионов H⁺: {{ .Hplus }}</div>
+</div>
+</body>
+</html>

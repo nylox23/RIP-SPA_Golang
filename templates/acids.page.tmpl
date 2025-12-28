@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор кислот</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body>
+<header>
+    <button type="button" class="button home" onclick="location.href='/acids'">⌂  Домой</button>
+</header>
+<div class="top-row">
+    {{ if ne .cart_count 0 }}
+        <button  type="button" class="button calc-button" onclick="location.href='/carbonate/{{ .carbonate_id }}'">🧪 Рассчитать <span class="indicator">{{ .cart_count }}</span></button>
+    {{ else }}
+        <button type="button" class="button calc-button" style="background-color: #001d2f">🧪 Рассчитать </button>
+    {{ end }}
+    <form class="search-bar" action="/acids" method="GET">
+        <input type="search" class="search-bar" name="search" placeholder="Найти кислоту..." value="{{ .search }}">
+    </form>
+</div>
+<div class="grid-container">
+    {{ range .data }}
+    <div class="card acid-card">
+            <h3>{{ .Name }}</h3>
+            <img src="{{ .Img }}" alt="{{ .Name }}">
+        <div class="buttons">
+            <form action="/add-to-carbonate" method="POST">
+                <input type="hidden" name="acid_id" value="{{ .ID }}">
+                <button type="submit" class="button">Добавить в расчет</button>
+            </form>
+            <button type="button" class="button secondary" onclick="location.href='/acids/{{ .ID }}'">Детали</button>
+        </div>
+    </div>
+    {{ end }}
+</div>
+</body>
+</html>

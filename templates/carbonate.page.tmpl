@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Окончательный расчет</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body>
+    <header style="justify-content: space-evenly">
+        <button type="button" class="button home" onclick="location.href='/acids'">⌂  Домой</button>
+    </header>
+    <input class="carb-number" type="number" placeholder="Масса CaCO3 (г)" value="{{ if .mass }}{{ .mass }}{{ else }}{{ "" }}{{ end }}">
+    <div class="calc-header">
+        <span>Название</span>
+        <span>Количество (г)</span>
+        <span>Объем CO₂ (л)</span>
+    </div>
+    {{ range .data }}
+    <div class="card calc-card">
+        <div><div><img class="preview" src="{{ .Acid.Img }}" alt="{{ .Acid.Name }}"></div><span>{{ .Acid.Name }}</span></div>
+        <input type="number" placeholder="Количество" value="{{ if .Mass }}{{ .Mass }}{{ else }}{{ "" }}{{ end }}">
+        <span>{{ if .Result }}{{ .Result }}{{ else }}{{ "" }}{{ end }}</span>
+    </div>
+    {{ end }}
+    <footer>
+        <form action="/carbonate/{{ .id }}/delete" method="POST">
+            <button type="submit" class="button secondary">Удалить все</button>
+        </form>
+    </footer>
+</body>
+</html>

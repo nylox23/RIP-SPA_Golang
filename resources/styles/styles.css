@@ -1,0 +1,189 @@
+/* styles.css */
+
+/* Скопированы: цветовая гамма, шрифт, дизайн кнопок и карточек */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #ffffff;
+    color: #001d2f;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-family: 'Roboto', serif;
+    font-weight: 400;
+    color: #004976;
+}
+
+header, footer {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    background-color: #001d2f;
+    padding: 10px 0;
+}
+
+form {
+    width: auto;
+}
+
+.card {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.button {
+    background-color: #004976;
+    color: #ffffff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.button.secondary {
+    background-color: #ffffff;
+    color: #004976;
+    border: solid 3px #004976;
+}
+
+input[type="search"],
+input[type="number"] {
+    padding: 8px;
+    border: 1px solid #001d2f;
+    border-radius: 3px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.top-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.top-row .calc-button {
+    flex: 0 0 auto;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-width: 128px;
+}
+
+.top-row form .search-bar {
+    flex: 1;
+    margin-left: 16px;
+    height: 40px;
+}
+
+.search-bar {
+    width: 100%;
+}
+
+.indicator {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #da1884;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.acid-card img {
+    width: 424px;
+    height: 318px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.acid-card .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.detail-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.detail-card p {
+    margin-bottom: 16px;
+}
+
+.detail-card .h-plus {
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.calc-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #004976;
+    text-align: center;
+}
+
+.carb-number {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.calc-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+}
+
+.calc-card span {
+    padding: 8px;
+}
+
+.calc-card input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calc-card div {
+    display: flex;
+    align-items: center;
+}
+
+.calc-card div div {
+    width: 100px;
+    height: 100px;
+    display: inline-flex;
+    justify-content: center;
+}
+
+.calc-card span {
+    margin: auto;
+}
+
+.preview{
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
