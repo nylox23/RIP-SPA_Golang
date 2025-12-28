@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Окончательный расчет</title>
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+<header>
+    <button type="button" class="button home" onclick="location.href='/acid_select'">⌂  Домой</button>
+</header>
+<input class="carb-number" type="number" placeholder="Масса CaCO3 (г)">
+<div class="calc-header">
+    <span>Название</span>
+    <span>Количество (г)</span>
+    <span>Объем CO₂ (л)</span>
+</div>
+{{ range $acid, $amount := .acids }}
+<div class="card calc-card">
+    <div><div><img class="preview" src="{{ $acid.ImgURL }}" alt="{{ $acid.Name }}"></div><span>{{ $acid.Name }}</span></div>
+    <input type="number" placeholder="Количество" value={{ $acid.Amount }}>
+    <span>{{ $amount }}</span>
+</div>
+{{ end }}
+<!--
+<form action="/select">
+    <button type="submit" class="button secondary">Назад</button>
+</form>
+-->
+</body>
+</html>

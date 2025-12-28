@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор кислот</title>
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+<header>
+    <button type="button" class="button home" onclick="location.href='/acid_select'">⌂  Домой</button>
+</header>
+<div class="top-row">
+    <button  type="button" class="button calc-button" onclick="location.href='/carbonate/1'">🧪 Рассчитать <span class="indicator">3</span></button>
+    <form class="search-bar" action="/acid_select" method="GET">
+        <input type="search" class="search-bar" name="query" placeholder="Найти кислоту..." value="{{ .query }}">
+    </form>
+</div>
+<div class="grid-container">
+    {{ range .acids }}
+    <div class="card acid-card">
+            <h3>{{ .Name }}</h3>
+            <img src="{{ .ImgURL }}" alt="{{ .Name }}">
+        <div class="buttons">
+            <!--
+            <button class="button">Добавить в расчет</button>
+            -->
+            <button type="submit" class="button secondary" onclick="location.href='/acid/{{ .ID }}'">Детали</button>
+        </div>
+    </div>
+    {{ end }}
+</div>
+</body>
+</html>
